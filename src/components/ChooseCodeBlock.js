@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react';
 import '../App.css';
 import axios from "axios";
-// import dotenv from "dotenv";
-// dotenv.config();
 
 function ChooseCodeBlock({ setActiveCodeBlock, notChosen, isMentor }) {
     const [blockNames, setBlockNames] = useState([])
     useEffect(() =>{
-        const APP_URL = /*process.env.APP_URL ||*/ 'http://localhost:3002';
+        const APP_URL = process.env.APP_URL || 'http://localhost:3002';
         axios.get(APP_URL+'/names')
             .then(response => {
-                console.log('Data received from server:', response.data);
                 delete response.data.data._id;
                 setBlockNames(Object.values(response.data.data));
             })

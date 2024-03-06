@@ -4,9 +4,9 @@ import Prism from 'prismjs';
 import hljs from '../../node_modules/highlight.js/lib/core';
 import javascript from '../../node_modules/highlight.js/lib/languages/javascript';
 import smiley from "../smiley.png";
+import '../../node_modules/highlight.js/styles/github.css';
  //background-color: #282c34;
-hljs.registerLanguage('javascript', javascript);
-
+ hljs.registerLanguage('javascript', javascript);
 
 function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     const [title, setTitle] = useState("");
@@ -14,10 +14,18 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     const [solution, setSolution] = useState("");
     const [ws, setWS] = useState(null);
     const [isFinished, setIsFinished] = useState(false);
-    const codeRef = useRef(null)
-    
+    const codeRef = useRef(null);
+    const initialCode = useRef("");
+
     useEffect(() => {
-        const SOCKET_URL = /*process.env.SERVER_URL ||*/ 'ws://localhost:3001';
+      if (codeRef.current) {
+          delete codeRef.current.dataset.highlighted;
+          hljs.highlightElement(codeRef.current);
+      }
+  }, [code]);
+
+    useEffect(() => {
+        const SOCKET_URL = process.env.SERVER_URL || 'ws://localhost:3001';
         const socket = new WebSocket(SOCKET_URL);
     
         socket.addEventListener('open', () => { 
@@ -33,10 +41,10 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
             setIsMentor(true)
           } 
           else if (data.type === 'codeBlock') {
-            console.log("got code block: "+JSON.stringify(data.block))
             setTitle(data.block.title)
             setCode(data.block.code)
             setSolution(data.block.solution)
+            initialCode.current = data.block.code
           }
           else if (data.type === 'code') {
             setCode(data.code)
@@ -56,19 +64,19 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
         };
       }, [isActive, index, isMentor]);
 
+      
+
     const handleCodeChange = (event) => {
         ws.send(JSON.stringify({ type: 'changeCode', newCode: event.target.value}));
         setCode(event.target.value);
-         codeRef.current = event.target.value
-        // const result_element = document.querySelector("#highlighting-content");
-        // // // Update code
-        // result_element.innerText = event.target.value;
-
-        // // Syntax Highlight
-        // Prism.highlightElement(codeRef, Prism.languages.javascript, 'javascript');    
-    
     }
 
+    const handleReset = () => {
+      if(initialCode.current != ""){
+        ws.send(JSON.stringify({ type: 'changeCode', newCode: initialCode.current}));
+        setCode(initialCode.current);
+      }
+    }
     const handleSubmit = () => {
       const cleanCode = code.replace(/\s/g, '')
       if(cleanCode === solution.replace(/\s/g, '')) {
@@ -103,9 +111,11 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
                     <code id="highlighting-content" ref={codeRef} className="language-javascript">
                         {code}
                     </code>
-                </pre>
-            </div>
-            <button className="bottom-right-button" onClick={handleSubmit} disabled={isMentor}>Submit</button></>
+                </pre></div>
+                <div className="button-container">
+                  <button onClick={handleReset} disabled={isMentor}>Reset</button>
+                  <button onClick={handleSubmit} disabled={isMentor}>Submit</button>
+              </div></>
 
         )
     }
