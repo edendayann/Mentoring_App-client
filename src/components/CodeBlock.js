@@ -15,7 +15,6 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     const [solution, setSolution] = useState("");
     const [ws, setWS] = useState(null);
     const [success, setSuccess] = useState(false);
-    //const codeRef = useRef(null);
     const initialCode = useRef("");
     const [connected, setConnected] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -24,7 +23,6 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       setLoading(true);
       
       const APP_URL = process.env.APP_URL || 'http://localhost:3002';
-      //const APP_URL = 'https://mentoring-app-client.onrender.com/3002';
       const fetchData = async () => {
         try{
           const response = await axios.get(`${APP_URL}/codeBlock/${index}`);
@@ -45,7 +43,6 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       fetchData();
       
       const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
-      //const SOCKET_URL = 'wss://mentoring-app-client.onrender.com:3001';
       const socket = new WebSocket(SOCKET_URL);
   
       socket.addEventListener('open', () => { 
@@ -60,22 +57,25 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       socket.addEventListener('message', (event) => {
         const data = JSON.parse(event.data);    
         if (data.type === 'mentor') {
-          if (data.data === 'true'){
-            console.log('mentor is in block number ' + index);
-            setIsMentor(true)
-          }
-          else{
-            console.log('mentor is in block number ' + index);
-            setIsMentor(false)
-          }
+          if(data.index == index)
+            setIsMentor(Boolean(data.data));
+          // if (data.data === 'true'){
+          //   console.log('mentor is in block number ' + index);
+          //   setIsMentor(true)
+          // }
+          // else{
+          //   console.log('mentor is in block number ' + index);
+          //   setIsMentor(false)
+          // }
         } 
         else if (data.type === 'code') {
-          if(data.index == index)
+          if(data.index == index) // data.index is string
             setCode(data.code);
         }
       });
   
       socket.addEventListener('close', () => {
+        socket.send(JSON.stringify({ type: 'closePage', index: index, isMentor: isMentor }));
         console.log('Disconnected from WebSocket');
         setConnected(false);
       });
@@ -84,7 +84,7 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       setLoading(false);
   
       return () => {
-        socket.send(JSON.stringify({ type: 'closePage', isMentor: isMentor }));
+        socket.send(JSON.stringify({ type: 'closePage', index: index, isMentor: isMentor }));
         socket.close();
         setConnected(false);
       };
