@@ -4,8 +4,6 @@ import axios from "axios";
 import hljs from '../../node_modules/highlight.js/lib/core';
 import javascript from '../../node_modules/highlight.js/lib/languages/javascript';
 import smiley from "../smiley.png";
-import '../../node_modules/highlight.js/styles/github.css';
- //background-color: #282c34;
 import Highlighter from "./Highlighter";
 hljs.registerLanguage('javascript', javascript);
 
@@ -22,8 +20,8 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     useEffect(() =>{
       setLoading(true);
       
-      const APP_URL = process.env.APP_URL || 'http://localhost:3001';
-      //const APP_URL = 'https://mentoring-app-server.onrender.com';
+      //const APP_URL = process.env.APP_URL || 'http://localhost:3001';
+      const APP_URL = 'https://mentoring-app-server.onrender.com';
       const fetchData = async () => {
         try{
           const response = await axios.get(`${APP_URL}/codeBlock/${index}`);
@@ -43,8 +41,8 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       }
       fetchData();
       
-      const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
-      //const SOCKET_URL = 'wss://mentoring-app-server.onrender.com';
+      //const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
+      const SOCKET_URL = 'wss://mentoring-app-server.onrender.com';
       const socket = new WebSocket(SOCKET_URL);
   
       socket.addEventListener('open', () => { 
