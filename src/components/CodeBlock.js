@@ -23,10 +23,10 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       setLoading(true);
       
       //const APP_URL = process.env.APP_URL || 'http://localhost:3002';
-      const APP_URL = 'https://mentoring-app-server.onrender.com:3002';
+      //const APP_URL = 'https://mentoring-app-server.onrender.com:3002';
       const fetchData = async () => {
         try{
-          const response = await axios.get(`https://mentoring-app-server.onrender.com:3002/codeBlock/${index}`);
+          const response = await axios.get(`https://mentoring-app-server.onrender.com/codeBlock/${index}`);
           if(response){
             const block = response.data.block;
             setTitle(block.title);
@@ -45,7 +45,7 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       
       //const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
       //const SOCKET_URL = 'wss://mentoring-app-server.onrender.com:3001';
-      const socket = new WebSocket('wss://mentoring-app-server.onrender.com:3001');
+      const socket = new WebSocket('wss://mentoring-app-server.onrender.com');
   
       socket.addEventListener('open', () => { 
         console.log('Connected to WebSocket');
