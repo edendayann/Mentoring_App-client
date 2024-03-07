@@ -25,6 +25,7 @@ To run the app locally, follow these steps:
 1. Clone the client and server repositories.
 2. Run npm install command for each repository.
 3. Activate the **server** using the command ``node ./index.js``.
-3. Activate the **client** using the command ``npm start``.
-4. The application will be accessible at http://localhost:3000.
+4. In the following files, update the path to match the local environment: src/chooseCodeBlock.js src/CodeBlock.js 
+5. Activate the **client** using the command ``npm start``.
+6. The application will be accessible at http://localhost:3000.
 
