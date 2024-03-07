@@ -6,8 +6,8 @@ function ChooseCodeBlock({ setActiveCodeBlock, notChosen, isMentor }) {
     const [blockNames, setBlockNames] = useState([])
     useEffect(() =>{
         //const APP_URL = process.env.APP_URL || 'http://localhost:3002';
-        const APP_URL = 'https://mentoring-app-server.onrender.com:3002';
-        axios.get(`${APP_URL}/names`)
+        //const APP_URL = 'https://mentoring-app-server.onrender.com:3002';
+        axios.get(`https://mentoring-app-server.onrender.com:3002/names`)
             .then(response => {
                 delete response.data.data._id;
                 setBlockNames(Object.values(response.data.data));
