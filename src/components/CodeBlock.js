@@ -23,7 +23,7 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       setLoading(true);
       
       //const APP_URL = process.env.APP_URL || 'http://localhost:3002';
-      const APP_URL = 'https://mentoring-app-client.onrender.com:3002';
+      const APP_URL = 'https://mentoring-app-server.onrender.com:3002';
       const fetchData = async () => {
         try{
           const response = await axios.get(`${APP_URL}/codeBlock/${index}`);
@@ -44,7 +44,7 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       fetchData();
       
       //const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
-      const SOCKET_URL = 'wss://mentoring-app-client.onrender.com:3001';
+      const SOCKET_URL = 'wss://mentoring-app-server.onrender.com:3001';
       const socket = new WebSocket(SOCKET_URL);
   
       socket.addEventListener('open', () => { 
