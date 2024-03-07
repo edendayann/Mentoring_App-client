@@ -1,7 +1,7 @@
 import './App.css';
 import ChooseCodeBlock from './components/ChooseCodeBlock';
 import CodeBlock from './components/CodeBlock';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
 const Indexes = [0,1,2,3]
 function App() {
@@ -13,8 +13,8 @@ function App() {
       <header className="App-header">
         <ChooseCodeBlock setActiveCodeBlock={setActiveCodeBlock} notChosen={activeCodeBlock === -1} isMentor={isMentor}/>
         {Indexes.map(index => 
-                <CodeBlock index={index} isActive={activeCodeBlock === index}
-                            isMentor={isMentor} setIsMentor={setIsMentor}/>
+                <Suspense fallback="loading"><CodeBlock index={index} isActive={activeCodeBlock === index}
+                            isMentor={isMentor} setIsMentor={setIsMentor}/></Suspense>
             )}
       </header>
     </div>

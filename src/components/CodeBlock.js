@@ -1,11 +1,12 @@
-import { ReactDOM, useState, useRef, useEffect, Suspense } from "react"
-import '../App.css'
+import { useState, useRef, useEffect, Suspense } from "react";
+import '../App.css';
 import axios from "axios";
 import hljs from '../../node_modules/highlight.js/lib/core';
 import javascript from '../../node_modules/highlight.js/lib/languages/javascript';
 import smiley from "../smiley.png";
 import '../../node_modules/highlight.js/styles/github.css';
  //background-color: #282c34;
+ import Highlighter from "./Highlighter";
  hljs.registerLanguage('javascript', javascript);
 
 function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
@@ -14,7 +15,7 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     const [solution, setSolution] = useState("");
     const [ws, setWS] = useState(null);
     const [success, setSuccess] = useState(false);
-    const codeRef = useRef(null);
+    //const codeRef = useRef(null);
     const initialCode = useRef("");
     const [connected, setConnected] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -27,7 +28,6 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       const fetchData = async () => {
         try{
           const response = await axios.get(`${APP_URL}/codeBlock/${index}`);
-          console.log(response);
           if(response){
             const block = response.data.block;
             setTitle(block.title);
@@ -41,8 +41,8 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
         } catch(error){
             console.error('Error fetching data:', error);
         }
-    }
-    fetchData();
+      }
+      fetchData();
       
       const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
       //const SOCKET_URL = 'wss://mentoring-app-client.onrender.com:3001';
@@ -70,7 +70,8 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
           }
         } 
         else if (data.type === 'code') {
-          setCode(data.code)
+          if(data.index == index)
+            setCode(data.code);
         }
       });
   
@@ -90,33 +91,13 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     }, []);
 
     useEffect(() => {
-      codeRef.current = document.getElementById('highlighting-content');
-      if (codeRef.current) {
-          delete codeRef.current.dataset.highlighted;
-          hljs.highlightElement(codeRef.current);
-      }
-      else{
-        console.log("else")
-        const codeElement = document.createElement('code');
-        codeElement.id = 'highlighting-content';
-        codeElement.className = 'language-javascript';
-        const highlightedCode = hljs.highlight(code, {language: 'javascript', ignoreIllegals: true});
-        
-        codeElement.innerHTML = highlightedCode.value;console.log(codeElement);
-        codeRef.current = codeElement;
-        //document.body.appendChild(codeElement);
-        //hljs.highlightElement(codeElement);
-      }
-    }, [code]);
-
-    useEffect(() => {
       if(isActive && connected)
           ws.send(JSON.stringify({ type: 'joinCodeBlock', index }));
     }, [isActive, index])
 
 
     const handleCodeChange = (event) => {
-        ws.send(JSON.stringify({ type: 'changeCode', newCode: event.target.value}));
+        ws.send(JSON.stringify({ type: 'changeCode', index: index, newCode: event.target.value}));
         setCode(event.target.value);
     }
 
@@ -149,7 +130,6 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       if(loading){
         return <h2>Loading..</h2>;
       }
-      //console.log(codeRef.current ? codeRef.current.innerHTML:"basa")
       return (<>
         <plaintext className="codeTitle">{title}</plaintext>
             <div id={index} className="CodeBlock">
@@ -160,11 +140,8 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
                         spellCheck="false"
                         readOnly={isMentor}
                     />}
-                <pre id="highlighting">
-                    <code id="highlighting-content" ref={codeRef} className="language-javascript">
-                        {code}
-                    </code>
-                </pre></div>
+                    <Suspense fallback="loading"><Highlighter code={code}/></Suspense>
+                </div>
                 <div className="button-container">
                   <button onClick={handleReset} disabled={isMentor}>Reset</button>
                   <button onClick={handleSubmit} disabled={isMentor}>Submit</button>
