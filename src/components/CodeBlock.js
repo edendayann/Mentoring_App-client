@@ -6,8 +6,10 @@ import javascript from '../../node_modules/highlight.js/lib/languages/javascript
 import smiley from "../smiley.png";
 import '../../node_modules/highlight.js/styles/github.css';
  //background-color: #282c34;
- import Highlighter from "./Highlighter";
- hljs.registerLanguage('javascript', javascript);
+import Highlighter from "./Highlighter";
+import dotenv from "dotenv";
+dotenv.config();
+hljs.registerLanguage('javascript', javascript);
 
 function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     const [title, setTitle] = useState("");
