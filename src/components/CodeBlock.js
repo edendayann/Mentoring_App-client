@@ -57,9 +57,11 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
   
       socket.addEventListener('message', (event) => {
         const data = JSON.parse(event.data);    
-        if (data.type === 'mentor') {
-          if(data.index == index)
-            setIsMentor((data.data === 'true' ? true : false));
+        if (isActive && data.type === 'mentor' && data.index == index) {
+          if(isMentor && data.data == 'false')
+            setIsMentor(true);
+          else if(!isMentor && data.data == 'true')
+            setIsMentor(false);
         } 
         else if (data.type === 'code') {
           if(data.index == index) // data.index is string
