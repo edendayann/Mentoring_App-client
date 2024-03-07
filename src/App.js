@@ -1,7 +1,7 @@
 import './App.css';
 import ChooseCodeBlock from './components/ChooseCodeBlock';
 import CodeBlock from './components/CodeBlock';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const Indeces = [0,1,2,3]
 function App() {
