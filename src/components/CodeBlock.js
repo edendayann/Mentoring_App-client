@@ -60,15 +60,7 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
         const data = JSON.parse(event.data);    
         if (data.type === 'mentor') {
           if(data.index == index)
-            setIsMentor(Boolean(data.data));
-          // if (data.data === 'true'){
-          //   console.log('mentor is in block number ' + index);
-          //   setIsMentor(true)
-          // }
-          // else{
-          //   console.log('mentor is in block number ' + index);
-          //   setIsMentor(false)
-          // }
+            setIsMentor((data.data === 'true' ? true : false));
         } 
         else if (data.type === 'code') {
           if(data.index == index) // data.index is string
