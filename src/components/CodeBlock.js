@@ -5,6 +5,7 @@ import hljs from '../../node_modules/highlight.js/lib/core';
 import javascript from '../../node_modules/highlight.js/lib/languages/javascript';
 import smiley from "../smiley.png";
 import Highlighter from "./Highlighter";
+import '../../node_modules/highlight.js/styles/github.css';
 hljs.registerLanguage('javascript', javascript);
 
 function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
@@ -132,7 +133,7 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
                         spellCheck="false"
                         readOnly={isMentor}
                     />}
-                    <Suspense fallback="loading"><Highlighter code={code}/></Suspense>
+                    <Highlighter code={code}/>
                 </div>
                 <div className="button-container">
                   <button onClick={handleReset} disabled={isMentor}>Reset</button>

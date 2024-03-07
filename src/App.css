@@ -144,10 +144,6 @@ button:hover{
   background-image: url('https://img.freepik.com/free-vector/flower-seamless-pattern-background_1217-761.jpg?w=740&t=st=1683105026~exp=1683105626~hmac=9839fc1f9f9270399804001e8efff90d229a3b3d3f1affc61206a013dd8842e4')
 }
 
-.App-link {
-  color: #61dafb;
-}
-
 @keyframes smiley-spin {
   from {
     transform: rotate(360deg);
