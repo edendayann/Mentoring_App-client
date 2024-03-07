@@ -7,8 +7,6 @@ import smiley from "../smiley.png";
 import '../../node_modules/highlight.js/styles/github.css';
  //background-color: #282c34;
 import Highlighter from "./Highlighter";
-import dotenv from "dotenv";
-dotenv.config();
 hljs.registerLanguage('javascript', javascript);
 
 function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
@@ -24,7 +22,8 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     useEffect(() =>{
       setLoading(true);
       
-      const APP_URL = process.env.APP_URL || 'http://localhost:3002';
+      //const APP_URL = process.env.APP_URL || 'http://localhost:3002';
+      const APP_URL = 'https://mentoring-app-client.onrender.com:3002';
       const fetchData = async () => {
         try{
           const response = await axios.get(`${APP_URL}/codeBlock/${index}`);
@@ -44,7 +43,8 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       }
       fetchData();
       
-      const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
+      //const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
+      const SOCKET_URL = 'wss://mentoring-app-client.onrender.com:3001';
       const socket = new WebSocket(SOCKET_URL);
   
       socket.addEventListener('open', () => { 
