@@ -59,9 +59,9 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
         const data = JSON.parse(event.data);    
         if (isActive && data.type === 'mentor' && data.index == index) {
           if(isMentor && data.data == 'false')
-            setIsMentor(true);
-          else if(!isMentor && data.data == 'true')
             setIsMentor(false);
+          else if(!isMentor && data.data == 'true')
+            setIsMentor(true);
         } 
         else if (data.type === 'code') {
           if(data.index == index) // data.index is string
