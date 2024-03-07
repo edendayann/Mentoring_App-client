@@ -22,8 +22,8 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     useEffect(() =>{
       setLoading(true);
       
-      //const APP_URL = process.env.APP_URL || 'http://localhost:3002';
-      const APP_URL = 'https://mentoring-app-server.onrender.com:3002';
+      const APP_URL = process.env.APP_URL || 'http://localhost:3001';
+      //const APP_URL = 'https://mentoring-app-server.onrender.com';
       const fetchData = async () => {
         try{
           const response = await axios.get(`${APP_URL}/codeBlock/${index}`);
@@ -43,8 +43,8 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       }
       fetchData();
       
-      //const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
-      const SOCKET_URL = 'wss://mentoring-app-server.onrender.com:3001';
+      const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
+      //const SOCKET_URL = 'wss://mentoring-app-server.onrender.com';
       const socket = new WebSocket(SOCKET_URL);
   
       socket.addEventListener('open', () => { 
@@ -61,14 +61,6 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
         if (data.type === 'mentor') {
           if(data.index == index)
             setIsMentor(Boolean(data.data));
-          // if (data.data === 'true'){
-          //   console.log('mentor is in block number ' + index);
-          //   setIsMentor(true)
-          // }
-          // else{
-          //   console.log('mentor is in block number ' + index);
-          //   setIsMentor(false)
-          // }
         } 
         else if (data.type === 'code') {
           if(data.index == index) // data.index is string

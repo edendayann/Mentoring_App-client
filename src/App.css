@@ -112,9 +112,9 @@ button {
   display: inline-block;
   padding: 0.5rem 1rem;
   border-radius: 5px;
-  margin-bottom: 10px; /* Add margin between buttons */
-  border: none; /* Remove border */
-  cursor: pointer; /* Change cursor to pointer on hover */
+  margin-bottom: 10px;
+  border: none;
+  cursor: pointer;
 }
 
 button:hover{
@@ -156,7 +156,6 @@ button:hover{
     transform: rotate(0deg);
   }
 }
-
 
 .finished {
   position: absolute;
