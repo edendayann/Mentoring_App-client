@@ -1,7 +1,7 @@
 # Online coding app for mentoring
 
-[deployed website](https://mentoring-app-client.onrender.com/)
-[server repository](https://github.com/edendayann/Mentoring_App-server)
+- [deployed website](https://mentoring-app-client.onrender.com/)
+- [server repository](https://github.com/edendayann/Mentoring_App-server)
 
 ### About the project
 
