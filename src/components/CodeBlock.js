@@ -1,4 +1,4 @@
-eimport { useState, useRef, useEffect, Suspense } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import '../App.css';
 import axios from "axios";
 import hljs from '../../node_modules/highlight.js/lib/core';
