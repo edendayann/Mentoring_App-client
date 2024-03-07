@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { ReactDOM, useState, useRef, useEffect, Suspense } from "react"
 import '../App.css'
 import axios from "axios";
 import hljs from '../../node_modules/highlight.js/lib/core';
@@ -17,25 +17,35 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     const codeRef = useRef(null);
     const initialCode = useRef("");
     const [connected, setConnected] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() =>{
-      //const APP_URL = process.env.APP_URL || 'http://localhost:3002';
-      const APP_URL = 'https://mentoring-app-client.onrender.com/3002';
-      axios.get(`${APP_URL}/codeBlock/${index}`)
-          .then(response => {
-              const block = response.data.block;
-              console.log(block);
-              setTitle(block.title);
-              setCode(block.code);
-              setSolution(block.solution);
-              initialCode.current = block.code;
-          })
-          .catch(error => {
-              console.error('Error fetching data:', error);
-          });
+      setLoading(true);
       
-      //const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
-      const SOCKET_URL = 'wss://mentoring-app-client.onrender.com/3001';
+      const APP_URL = process.env.APP_URL || 'http://localhost:3002';
+      //const APP_URL = 'https://mentoring-app-client.onrender.com/3002';
+      const fetchData = async () => {
+        try{
+          const response = await axios.get(`${APP_URL}/codeBlock/${index}`);
+          console.log(response);
+          if(response){
+            const block = response.data.block;
+            setTitle(block.title);
+            setCode(block.code);
+            setSolution(block.solution);
+            initialCode.current = block.code;
+          }
+          else{
+            console.error('Error fetching data: not found');
+          }
+        } catch(error){
+            console.error('Error fetching data:', error);
+        }
+    }
+    fetchData();
+      
+      const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
+      //const SOCKET_URL = 'wss://mentoring-app-client.onrender.com:3001';
       const socket = new WebSocket(SOCKET_URL);
   
       socket.addEventListener('open', () => { 
@@ -70,6 +80,7 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       });
   
       setWS(socket);
+      setLoading(false);
   
       return () => {
         socket.send(JSON.stringify({ type: 'closePage', isMentor: isMentor }));
@@ -79,9 +90,22 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     }, []);
 
     useEffect(() => {
+      codeRef.current = document.getElementById('highlighting-content');
       if (codeRef.current) {
           delete codeRef.current.dataset.highlighted;
           hljs.highlightElement(codeRef.current);
+      }
+      else{
+        console.log("else")
+        const codeElement = document.createElement('code');
+        codeElement.id = 'highlighting-content';
+        codeElement.className = 'language-javascript';
+        const highlightedCode = hljs.highlight(code, {language: 'javascript', ignoreIllegals: true});
+        
+        codeElement.innerHTML = highlightedCode.value;console.log(codeElement);
+        codeRef.current = codeElement;
+        //document.body.appendChild(codeElement);
+        //hljs.highlightElement(codeElement);
       }
     }, [code]);
 
@@ -122,7 +146,10 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
           </div>
         )
       }
-      if(initialCode.current === "") return <h2>Loading..</h2>
+      if(loading){
+        return <h2>Loading..</h2>;
+      }
+      //console.log(codeRef.current ? codeRef.current.innerHTML:"basa")
       return (<>
         <plaintext className="codeTitle">{title}</plaintext>
             <div id={index} className="CodeBlock">
