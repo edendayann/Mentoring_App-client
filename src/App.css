@@ -7,9 +7,10 @@
 h2{
   color:#000;
 }
+
 .button-container {
   width: 100%;
-  bottom: 23%; 
+  bottom: 15%; 
   position: fixed;
   right: 0%;
   width: 25%;
@@ -21,13 +22,13 @@ h2{
   button {
     padding: 0.5rem 1rem;
     position: absolute;
-    display: inline-block;; /* Make buttons block-level elements */
+    display: inline-block; /* Make buttons block-level elements */
     width: fit-content; /* Make buttons fill the entire width of the menu */
   }
   button + button {
     margin-left: 5rem;
   }
-}
+} 
 
 .codeTitle{
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -39,13 +40,16 @@ h2{
   color: black;
   white-space: initial;
   width: 63%;
+  h4 {
+    margin-bottom: 3px;
+  }
 }
+
 
 .CodeBlock {
   width: 50%;
   height: 35vh;
 
-  
   #editing, #highlighting {
     /* Both elements need the same text and space styling so they are directly on top of each other */
     width: 65%;
@@ -54,10 +58,9 @@ h2{
     /* padding: 0.5rem; */
     margin: auto;
     border-radius: 0.25rem;
-    top: 45%;
+    top: 50%;
     left: 57%;
     transform: translate(-50%, -50%);
-    
   }
   
   #editing, #highlighting, #highlighting * {

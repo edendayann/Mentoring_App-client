@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import '../App.css';
 import axios from "axios";
 
-function ChooseCodeBlock({ setActiveCodeBlock, notChosen, isMentor }) {
+function ChooseCodeBlock({ setActiveCodeBlock }) {
     const [blockNames, setBlockNames] = useState([])
     useEffect(() =>{
         //const APP_URL = process.env.APP_URL || 'http://localhost:3001';
@@ -19,7 +19,7 @@ function ChooseCodeBlock({ setActiveCodeBlock, notChosen, isMentor }) {
     },[]);
     return (
         <div className="ChooseCodeBlock">
-            <h4>{notChosen ? "Please choose code block" : isMentor ? "Welcome, Tom :)" : "Welcome, Josh :)" }</h4>
+            <h4>Please choose code block</h4>
         {blockNames.map((name, index) => 
             <p key={index}>
                 <button onClick={() => setActiveCodeBlock(index)}>{name}</button>

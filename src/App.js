@@ -11,10 +11,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <ChooseCodeBlock setActiveCodeBlock={setActiveCodeBlock} notChosen={activeCodeBlock === -1} isMentor={isMentor}/>
+        <ChooseCodeBlock setActiveCodeBlock={setActiveCodeBlock}/>
         {Indexes.map(index => 
-                <Suspense fallback="loading"><CodeBlock index={index} isActive={activeCodeBlock === index}
-                            isMentor={isMentor} setIsMentor={setIsMentor}/></Suspense>
+                <Suspense fallback="loading"><CodeBlock index={index} notChosen={activeCodeBlock === -1} isActive={activeCodeBlock === index}/></Suspense>
             )}
       </header>
     </div>

@@ -8,7 +8,7 @@ import Highlighter from "./Highlighter";
 import '../../node_modules/highlight.js/styles/github.css';
 hljs.registerLanguage('javascript', javascript);
 
-function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
+function CodeBlock({ index, notChosen, isActive }) {
     const [title, setTitle] = useState("");
     const [code, setCode] = useState("");
     const [solution, setSolution] = useState("");
@@ -17,12 +17,17 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
     const initialCode = useRef("");
     const [connected, setConnected] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [isMentor, setIsMentor] = useState(true);
 
     useEffect(() =>{
       setLoading(true);
       
       //const APP_URL = process.env.APP_URL || 'http://localhost:3001';
       const APP_URL = 'https://mentoring-app-server.onrender.com';
+      //const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
+      const SOCKET_URL = 'wss://mentoring-app-server.onrender.com';
+
+      const socket = new WebSocket(SOCKET_URL);
       const fetchData = async () => {
         try{
           const response = await axios.get(`${APP_URL}/codeBlock/${index}`);
@@ -41,10 +46,6 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
         }
       }
       fetchData();
-      
-      //const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
-      const SOCKET_URL = 'wss://mentoring-app-server.onrender.com';
-      const socket = new WebSocket(SOCKET_URL);
   
       socket.addEventListener('open', () => { 
         console.log('Connected to WebSocket');
@@ -56,21 +57,20 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       });
   
       socket.addEventListener('message', (event) => {
-        const data = JSON.parse(event.data);    
-        if (isActive && data.type === 'mentor' && data.index == index) {
-          if(isMentor && data.data == 'false')
+        const data = JSON.parse(event.data); 
+        if (data.type === 'mentor' && data.index === index) {
+          if(isMentor && data.data === false)
             setIsMentor(false);
-          else if(!isMentor && data.data == 'true')
+          else if(!isMentor && data.data === true)
             setIsMentor(true);
         } 
         else if (data.type === 'code') {
-          if(data.index == index) // data.index is string
+          if(data.index === index)
             setCode(data.code);
         }
       });
   
       socket.addEventListener('close', () => {
-        socket.send(JSON.stringify({ type: 'closePage', index: index, isMentor: isMentor }));
         console.log('Disconnected from WebSocket');
         setConnected(false);
       });
@@ -79,16 +79,26 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
       setLoading(false);
   
       return () => {
-        socket.send(JSON.stringify({ type: 'closePage', index: index, isMentor: isMentor }));
+        if(isMentor){
+          socket.send(JSON.stringify({ type: 'closeMentor' , index: index}));
+          setIsMentor(false)
+        }
         socket.close();
         setConnected(false);
       };
     }, []);
 
     useEffect(() => {
-      if(isActive && connected)
-          ws.send(JSON.stringify({ type: 'joinCodeBlock', index }));
-    }, [isActive, index])
+      if(connected){
+        if(isActive){
+          ws.send(JSON.stringify({ type: 'joinCodeBlock', index: index }));
+        }
+        else if(isMentor){
+          setIsMentor(false);
+          ws.send(JSON.stringify({ type: 'closeMentor' , index: index}));
+        }
+      }
+    }, [isActive, isMentor, index])
 
 
     const handleCodeChange = (event) => {
@@ -126,7 +136,9 @@ function CodeBlock({ index, isActive, isMentor, setIsMentor }) {
         return <h2>Loading..</h2>;
       }
       return (<>
-        <plaintext className="codeTitle">{title}</plaintext>
+        <div className="codeTitle">
+          <h4>{isMentor ? "Welcome, Tom :)" : "Welcome, Josh :)"}</h4>
+          {title}</div>
             <div id={index} className="CodeBlock">
                     {!isMentor && <textarea id="editing"
                         onChange={handleCodeChange}
