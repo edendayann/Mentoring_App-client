@@ -6,7 +6,6 @@ import { Suspense, useState } from 'react';
 const Indexes = [0,1,2,3]
 function App() {
   const [activeCodeBlock, setActiveCodeBlock] = useState(-1)
-  const [isMentor, setIsMentor] = useState(true);
 
   return (
     <div className="App">

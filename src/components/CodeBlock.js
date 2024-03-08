@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, Suspense } from "react";
+import { useState, useRef, useEffect } from "react";
 import '../App.css';
 import axios from "axios";
 import hljs from '../../node_modules/highlight.js/lib/core';
@@ -8,7 +8,7 @@ import Highlighter from "./Highlighter";
 import '../../node_modules/highlight.js/styles/github.css';
 hljs.registerLanguage('javascript', javascript);
 
-function CodeBlock({ index, notChosen, isActive }) {
+function CodeBlock({ index, isActive }) {
     const [title, setTitle] = useState("");
     const [code, setCode] = useState("");
     const [solution, setSolution] = useState("");
@@ -19,6 +19,7 @@ function CodeBlock({ index, notChosen, isActive }) {
     const [loading, setLoading] = useState(true);
     const [isMentor, setIsMentor] = useState(true);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() =>{
       setLoading(true);
       
@@ -88,6 +89,7 @@ function CodeBlock({ index, notChosen, isActive }) {
       };
     }, []);
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
       if(connected){
         if(isActive){
@@ -107,7 +109,7 @@ function CodeBlock({ index, notChosen, isActive }) {
     }
 
     const handleReset = () => {
-      if(initialCode.current != ""){
+      if(initialCode.current !== ""){
         ws.send(JSON.stringify({ type: 'changeCode', newCode: initialCode.current}));
         setCode(initialCode.current);
       }
