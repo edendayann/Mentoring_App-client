@@ -19,14 +19,12 @@ function CodeBlock({ index, isActive }) {
     const [loading, setLoading] = useState(true);
     const [isMentor, setIsMentor] = useState(true);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
     useEffect(() =>{
       setLoading(true);
       
-      //const APP_URL = process.env.APP_URL || 'http://localhost:3001';
-      const APP_URL = 'https://mentoring-app-server.onrender.com';
-      //const SOCKET_URL = process.env.SOCKET_URL || 'ws://localhost:3001';
-      const SOCKET_URL = 'wss://mentoring-app-server.onrender.com';
+      const APP_URL = process.env.REACT_APP_APP_URL || 'http://localhost:3001';
+      const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || 'ws://localhost:3001';
 
       const socket = new WebSocket(SOCKET_URL);
       const fetchData = async () => {
@@ -54,15 +52,15 @@ function CodeBlock({ index, isActive }) {
       });
 
       socket.addEventListener('error', err => { 
-        console.log(err);
+        console.error(err);
       });
   
       socket.addEventListener('message', (event) => {
         const data = JSON.parse(event.data); 
         if (data.type === 'mentor' && data.index === index) {
-          if(isMentor && data.data === false)
+          if(data.data === false)
             setIsMentor(false);
-          else if(!isMentor && data.data === true)
+          else if(data.data === true)
             setIsMentor(true);
         } 
         else if (data.type === 'code') {
@@ -80,27 +78,22 @@ function CodeBlock({ index, isActive }) {
       setLoading(false);
   
       return () => {
-        if(isMentor){
+        if(isMentor)
           socket.send(JSON.stringify({ type: 'closeMentor' , index: index}));
-          setIsMentor(false)
-        }
         socket.close();
         setConnected(false);
       };
     }, []);
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
     useEffect(() => {
       if(connected){
-        if(isActive){
+        if(isActive)
           ws.send(JSON.stringify({ type: 'joinCodeBlock', index: index }));
-        }
-        else if(isMentor){
-          setIsMentor(false);
+        else if(isMentor)
           ws.send(JSON.stringify({ type: 'closeMentor' , index: index}));
-        }
       }
-    }, [isActive, isMentor, index])
+    }, [isActive, index])
 
 
     const handleCodeChange = (event) => {
@@ -129,7 +122,7 @@ function CodeBlock({ index, isActive }) {
           <div className="finished">
             <h2>Good Job!</h2>
             <a href="/">
-              <img src={smiley} className="smiley" />
+              <img src={smiley} className="smiley" alt="spinning-smiley" />
             </a>
           </div>
         )
@@ -155,7 +148,6 @@ function CodeBlock({ index, isActive }) {
                   <button onClick={handleReset} disabled={isMentor}>Reset</button>
                   <button onClick={handleSubmit} disabled={isMentor}>Submit</button>
               </div></>
-
         )
     }
 }
