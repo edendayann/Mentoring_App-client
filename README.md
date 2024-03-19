@@ -1,5 +1,6 @@
 # Online coding app for mentoring
 
+- [video demo](https://www.loom.com/share/c394e241e83b424ea574ecbe92b563bf)
 - [deployed website](https://mentoring-app-client.onrender.com/)
 - [server repository](https://github.com/edendayann/Mentoring_App-server)
 
@@ -11,7 +12,7 @@ This project enables real-time code collaboration with multiple users. The first
 
 - Frontend: React.js, Highlight.js, CSS
 - Backend: Node.js, Express
-- Communication: WebSockets, axios
+- Communication: WebSocket, axios
 - Database: MongoDB
 
 ### Deployment
@@ -25,7 +26,11 @@ To run the app locally, follow these steps:
 1. Clone the client and server repositories.
 2. Run npm install command for each repository.
 3. Activate the **server** using the command ``node ./index.js``.
-4. In the following files, update the path to match the local environment: src/chooseCodeBlock.js src/CodeBlock.js 
-5. Activate the **client** using the command ``npm start``.
-6. The application will be accessible at http://localhost:3000.
+4. Activate the **client** using the command ``npm start``.
+5. The application will be accessible at http://localhost:3000.
+
+### Live Demo
+
+
+https://github.com/edendayann/Mentoring_App-client/assets/127111269/28f2b6d7-15e9-4117-a28f-f230b67ee8f3
 
